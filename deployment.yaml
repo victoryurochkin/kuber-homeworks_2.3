@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hw23-web-app
+  namespace: hw23
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hw23-web-app
+  template:
+    metadata:
+      labels:
+        app: hw23-web-app
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - name: nginx-http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: web-content
+              mountPath: /usr/share/nginx/html
+              readOnly: true
+
+        - name: multitool
+          image: wbitt/network-multitool
+          ports:
+            - name: multitool-http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: HTTP_PORT
+              value: "8080"
+
+      volumes:
+        - name: web-content
+          configMap:
+            name: hw23-web-content
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hw23-web-service
+  namespace: hw23
+spec:
+  type: ClusterIP
+  selector:
+    app: hw23-web-app
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: nginx-http

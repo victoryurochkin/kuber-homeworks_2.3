@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hw23-ingress-tls
+  namespace: hw23
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - hw23.example.com
+      secretName: hw23-tls
+  rules:
+    - host: hw23.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hw23-web-service
+                port:
+                  number: 80
