@@ -274,5 +274,8 @@ kubectl logs
     ├── task3-rbac-developer.png
     └── task3-x509-developer.png
 ```
+---
+
+## Итог
 
 Все задания выполнены и подтверждены скриншотами.
